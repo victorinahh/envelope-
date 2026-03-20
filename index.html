@@ -12,8 +12,8 @@
       <!-- Красная полоска снизу -->
       <div style="position: absolute; bottom: 0; left: 0; right: 0; height: 6px; background: #e63946;"></div>
       <div style="text-align: center; padding-top: 50px;">
-        <div style="font-size: 24px; color: var(--color-text-primary); font-weight: 500; margin-bottom: 8px;">[Имя эксперта]</div>
-        <div style="font-size: 14px; color: var(--color-text-secondary);">Нажми, чтобы открыть</div>
+        <div style="font-size: 24px; color: var(--color-text-primary); font-weight: 500; margin-bottom: 8px;">Владимир</div>
+        <div style="font-size: 14px; color: var(--color-text-secondary);">Открыть</div>
         <!-- Красная сургучная печать -->
         <div style="margin-top: 24px; display: inline-flex; align-items: center; justify-content: center; width: 56px; height: 56px; background: #e63946; border-radius: 50%; box-shadow: 0 2px 8px rgba(230,57,70,0.4); animation: pulse 2s infinite;">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -31,7 +31,7 @@
       <!-- Заголовок с красной полосой -->
       <div style="background: #e63946; padding: 1.5rem; text-align: center;">
         <div style="font-size: 11px; color: rgba(255,255,255,0.7); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 4px;">Секретное досье</div>
-        <div style="font-size: 20px; color: #fff; font-weight: 500;">[Имя эксперта]</div>
+        <div style="font-size: 20px; color: #fff; font-weight: 500;">Владимир</div>
       </div>
       
       <!-- Контент -->
@@ -40,15 +40,15 @@
         <!-- Статистика -->
         <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 1.5rem;">
           <div style="background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 12px; text-align: center;">
-            <div id="stat1" style="font-size: 24px; font-weight: 500; color: #e63946;">0</div>
+            <div id="stat1" style="font-size: 24px; font-weight: 500; color: #e63946;">50000</div>
             <div style="font-size: 11px; color: var(--color-text-secondary);">подписчиков</div>
           </div>
           <div style="background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 12px; text-align: center;">
-            <div id="stat2" style="font-size: 24px; font-weight: 500; color: #e63946;">0%</div>
+            <div id="stat2" style="font-size: 24px; font-weight: 500; color: #e63946;">50%</div>
             <div style="font-size: 11px; color: var(--color-text-secondary);">потенциал роста</div>
           </div>
           <div style="background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 12px; text-align: center;">
-            <div id="stat3" style="font-size: 24px; font-weight: 500; color: #e63946;">0₽</div>
+            <div id="stat3" style="font-size: 24px; font-weight: 500; color: #e63946;">100000₽</div>
             <div style="font-size: 11px; color: var(--color-text-secondary);">упущено/мес</div>
           </div>
         </div>
@@ -62,10 +62,10 @@
         <!-- Кнопки -->
         <div style="display: flex; gap: 12px;">
           <button onclick="sendPrompt('Расскажи подробнее про эту идею с оффером')" style="flex: 1; padding: 12px 16px; font-size: 14px; background: #e63946; color: #fff; border: none; border-radius: var(--border-radius-md); cursor: pointer; font-weight: 500;">
-            Что за баг? ↗
+            Что за момент? ↗
           </button>
           <button onclick="sendPrompt('Сгенерируй мне готовый текст сообщения для эксперта')" style="flex: 1; padding: 12px 16px; font-size: 14px; border: 1px solid #e63946; color: #e63946; background: transparent; border-radius: var(--border-radius-md); cursor: pointer; font-weight: 500;">
-            Написать ему ↗
+            Написать ↗
           </button>
         </div>
         
@@ -130,7 +130,7 @@ function animateValue(id, start, end, duration, prefix, suffix) {
 }
 
 function typeText() {
-  const text = "Я нашёл одну штуку в твоей воронке, которая стоит тебе ~180K в месяц. Хочешь покажу где именно — или сам найдёшь? 😏";
+  const text = "Я нашёл один момент в вашей воронке, которая стоит вам -200К в месяц. Хочешь покажу где именно - или сами найдёте?)";
   const el = document.getElementById('typed-text');
   let i = 0;
   
