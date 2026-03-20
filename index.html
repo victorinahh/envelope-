@@ -1,147 +1,177 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Секретное досье</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      min-height: 100vh;
+      background: #ffffff;
+      padding: 1rem;
+    }
 
+    .container { max-width: 400px; margin: 0 auto; }
 
-<div id="app" style="padding: 2rem 0; font-family: var(--font-sans);">
-  
-  <!-- Закрытый конверт -->
-  <div id="envelope-closed" style="cursor: pointer; max-width: 400px; margin: 0 auto;">
-    <div style="text-align: center; margin-bottom: 1rem;">
-      <span style="font-size: 12px; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 2px;">Персональное сообщение для</span>
+    .envelope-closed { cursor: pointer; max-width: 400px; margin: 0 auto; }
+
+    .envelope-header { text-align: center; margin-bottom: 1rem; }
+
+    .envelope-label { font-size: 12px; color: #722f37; text-transform: uppercase; letter-spacing: 2px; opacity: 0.7; }
+
+    .envelope-card { background: #ffffff; border: 2px solid #722f37; border-radius: 16px; padding: 2rem; position: relative; overflow: hidden; box-shadow: 0 4px 20px rgba(114,47,55,0.1); }
+
+    .envelope-top { background: #722f37; padding: 1.5rem; margin: -2rem -2rem 1.5rem -2rem; text-align: center; }
+
+    .envelope-subtitle { font-size: 10px; color: rgba(255,255,255,0.7); text-transform: uppercase; letter-spacing: 2px; }
+
+    .envelope-name { font-size: 24px; color: #ffffff; font-weight: 600; margin-top: 4px; }
+
+    .envelope-hint { font-size: 14px; color: #722f37; text-align: center; opacity: 0.7; }
+
+    .seal { width: 56px; height: 56px; background: #722f37; border-radius: 50%; margin: 1.5rem auto; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 16px rgba(114,47,55,0.3); animation: pulse 2s ease-in-out infinite; }
+
+    .seal svg { width: 24px; height: 24px; stroke: #fff; }
+
+    @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+
+    .envelope-open { display: none; max-width: 440px; margin: 0 auto; }
+
+    .card { background: #ffffff; border: 2px solid #722f37; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(114,47,55,0.1); }
+
+    .card-header { background: #722f37; padding: 1.5rem; text-align: center; }
+
+    .card-header-label { font-size: 10px; color: rgba(255,255,255,0.7); text-transform: uppercase; letter-spacing: 2px; }
+
+    .card-header-name { font-size: 24px; color: #ffffff; font-weight: 600; margin-top: 4px; }
+
+    .card-body { padding: 1.5rem; background: #ffffff; }
+
+    .metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
+
+    .metric { text-align: center; }
+
+    .metric-value { font-size: 24px; font-weight: 700; color: #722f37; }
+
+    .metric-label { font-size: 11px; color: #722f37; opacity: 0.6; margin-top: 4px; }
+
+    .alert { margin-bottom: 1.5rem; }
+
+    .alert-badge { display: inline-block; background: #722f37; color: #fff; font-size: 10px; font-weight: 600; padding: 6px 12px; border-radius: 4px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+
+    .alert-text { font-size: 15px; color: #333; line-height: 1.6; padding-left: 12px; border-left: 3px solid #722f37; }
+
+    .buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    .btn { padding: 14px 20px; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; text-align: center; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 6px; }
+
+    .btn-primary { background: #722f37; color: #fff; border: none; }
+
+    .btn-secondary { background: #ffffff; color: #722f37; border: 2px solid #722f37; }
+
+    #confetti-container { position: fixed; inset: 0; pointer-events: none; z-index: 100; overflow: hidden; }
+
+    @keyframes confettiFall { 0% { transform: translateY(0) rotate(0deg); opacity: 1; } 100% { transform: translateY(100vh) rotate(720deg); opacity: 0; } }
+  </style>
+</head>
+<body>
+
+<div id="confetti-container"></div>
+
+<div class="container">
+
+  <div class="envelope-closed" id="envelope-closed" onclick="openEnvelope()">
+    <div class="envelope-header">
+      <span class="envelope-label">Персональное сообщение для</span>
     </div>
-    <div style="background: var(--color-background-primary); border: 1px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 2rem; position: relative; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
-      <!-- Красный клапан конверта -->
-      <div style="position: absolute; top: 0; left: 0; right: 0; height: 70px; background: #e63946; clip-path: polygon(0 0, 50% 100%, 100% 0);"></div>
-      <!-- Красная полоска снизу -->
-      <div style="position: absolute; bottom: 0; left: 0; right: 0; height: 6px; background: #e63946;"></div>
-      <div style="text-align: center; padding-top: 50px;">
-        <div style="font-size: 24px; color: var(--color-text-primary); font-weight: 500; margin-bottom: 8px;">Владимир</div>
-        <div style="font-size: 14px; color: var(--color-text-secondary);">Открыть</div>
-        <!-- Красная сургучная печать -->
-        <div style="margin-top: 24px; display: inline-flex; align-items: center; justify-content: center; width: 56px; height: 56px; background: #e63946; border-radius: 50%; box-shadow: 0 2px 8px rgba(230,57,70,0.4); animation: pulse 2s infinite;">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <path d="M12 4 L12 16 M6 10 L12 16 L18 10" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </div>
+    
+    <div class="envelope-card">
+      <div class="envelope-top">
+        <div class="envelope-subtitle">Секретное досье</div>
+        <div class="envelope-name">Владимир</div>
+      </div>
+      
+      <div class="envelope-hint">Нажми, чтобы открыть</div>
+      
+      <div class="seal">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 4 L12 16 M6 10 L12 16 L18 10"/>
+        </svg>
       </div>
     </div>
   </div>
 
-  <!-- Открытое содержимое -->
-  <div id="envelope-open" style="display: none; max-width: 440px; margin: 0 auto;">
-    <div style="background: var(--color-background-primary); border: 1px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
-      
-      <!-- Заголовок с красной полосой -->
-      <div style="background: #e63946; padding: 1.5rem; text-align: center;">
-        <div style="font-size: 11px; color: rgba(255,255,255,0.7); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 4px;">Секретное досье</div>
-        <div style="font-size: 20px; color: #fff; font-weight: 500;">Владимир</div>
+  <div class="envelope-open" id="envelope-open">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-header-label">Секретное досье</div>
+        <div class="card-header-name">Владимир</div>
       </div>
       
-      <!-- Контент -->
-      <div style="padding: 1.5rem;">
-        
-        <!-- Статистика -->
-        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 1.5rem;">
-          <div style="background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 12px; text-align: center;">
-            <div id="stat1" style="font-size: 24px; font-weight: 500; color: #e63946;">50000</div>
-            <div style="font-size: 11px; color: var(--color-text-secondary);">подписчиков</div>
+      <div class="card-body">
+        <div class="metrics">
+          <div class="metric">
+            <div class="metric-value">47 500</div>
+            <div class="metric-label">подписчиков</div>
           </div>
-          <div style="background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 12px; text-align: center;">
-            <div id="stat2" style="font-size: 24px; font-weight: 500; color: #e63946;">50%</div>
-            <div style="font-size: 11px; color: var(--color-text-secondary);">потенциал роста</div>
+          <div class="metric">
+            <div class="metric-value">340%</div>
+            <div class="metric-label">потенциал роста</div>
           </div>
-          <div style="background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 12px; text-align: center;">
-            <div id="stat3" style="font-size: 24px; font-weight: 500; color: #e63946;">100000₽</div>
-            <div style="font-size: 11px; color: var(--color-text-secondary);">упущено/мес</div>
+          <div class="metric">
+            <div class="metric-value">180К₽</div>
+            <div class="metric-label">упущено/мес</div>
           </div>
         </div>
         
-        <!-- Сообщение -->
-        <div style="background: var(--color-background-secondary); border-left: 4px solid #e63946; border-radius: 0; padding: 1rem; margin-bottom: 1.5rem; position: relative;">
-          <div style="position: absolute; top: -10px; left: 12px; background: #e63946; color: #fff; font-size: 10px; padding: 3px 10px; border-radius: 4px; text-transform: uppercase; font-weight: 500;">Обнаружено</div>
-          <p id="typed-text" style="font-size: 14px; line-height: 1.6; color: var(--color-text-primary); margin: 8px 0 0 0; min-height: 60px;"></p>
+        <div class="alert">
+          <div class="alert-badge">Обнаружено</div>
+          <div class="alert-text">Я нашёл один момент в вашей воронке, которая стоит вам -200К в месяц. Хотите покажу где именно?</div>
         </div>
         
-        <!-- Кнопки -->
-        <div style="display: flex; gap: 12px;">
-          <button onclick="sendPrompt('Расскажи подробнее про эту идею с оффером')" style="flex: 1; padding: 12px 16px; font-size: 14px; background: #e63946; color: #fff; border: none; border-radius: var(--border-radius-md); cursor: pointer; font-weight: 500;">
-            Что за момент? ↗
-          </button>
-          <button onclick="sendPrompt('Сгенерируй мне готовый текст сообщения для эксперта')" style="flex: 1; padding: 12px 16px; font-size: 14px; border: 1px solid #e63946; color: #e63946; background: transparent; border-radius: var(--border-radius-md); cursor: pointer; font-weight: 500;">
-            Написать ↗
-          </button>
+        <div class="buttons">
+          <button class="btn btn-primary" onclick="sendResponse('interested')">Что за момент? ↗</button>
+          <button class="btn btn-secondary" onclick="sendResponse('contact')">Написать ↗</button>
         </div>
-        
       </div>
     </div>
   </div>
 
 </div>
 
-<style>
-@keyframes pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-}
-</style>
-
 <script>
-const closedEnv = document.getElementById('envelope-closed');
-const openEnv = document.getElementById('envelope-open');
+const tg = window.Telegram?.WebApp;
+if (tg) { tg.ready(); tg.expand(); }
 
-closedEnv.onclick = () => {
-  closedEnv.style.transition = 'all 0.4s ease';
-  closedEnv.style.transform = 'scale(0.95) translateY(-10px)';
-  closedEnv.style.opacity = '0';
-  
-  setTimeout(() => {
-    closedEnv.style.display = 'none';
-    openEnv.style.display = 'block';
-    openEnv.style.opacity = '0';
-    openEnv.style.transform = 'translateY(20px)';
-    
-    setTimeout(() => {
-      openEnv.style.transition = 'all 0.4s ease';
-      openEnv.style.opacity = '1';
-      openEnv.style.transform = 'translateY(0)';
-    }, 50);
-    
-    // Анимация цифр
-    animateValue('stat1', 0, 47500, 1500, '', '');
-    animateValue('stat2', 0, 340, 1800, '', '%');
-    animateValue('stat3', 0, 180, 2000, '', 'K₽');
-    
-    // Эффект печатающегося текста
-    setTimeout(() => typeText(), 800);
-  }, 350);
-};
-
-function animateValue(id, start, end, duration, prefix, suffix) {
-  const el = document.getElementById(id);
-  const range = end - start;
-  const startTime = performance.now();
-  
-  function update(currentTime) {
-    const elapsed = currentTime - startTime;
-    const progress = Math.min(elapsed / duration, 1);
-    const eased = 1 - Math.pow(1 - progress, 3);
-    const current = Math.floor(start + range * eased);
-    el.textContent = prefix + current.toLocaleString('ru-RU') + suffix;
-    if (progress < 1) requestAnimationFrame(update);
+function createConfetti() {
+  const container = document.getElementById('confetti-container');
+  const colors = ['#722f37', '#ffffff', '#a85751', '#d4a5a5', '#f5e6e8'];
+  for (let i = 0; i < 60; i++) {
+    const confetti = document.createElement('div');
+    const size = Math.random() * 10 + 5;
+    confetti.style.cssText = `position: absolute; width: ${size}px; height: ${size * 0.4}px; background: ${colors[Math.floor(Math.random() * colors.length)]}; left: ${Math.random() * 100}%; top: -20px; opacity: ${Math.random() * 0.5 + 0.5}; animation: confettiFall ${Math.random() * 2 + 2}s ease-out forwards; animation-delay: ${Math.random() * 0.5}s;`;
+    container.appendChild(confetti);
   }
-  requestAnimationFrame(update);
+  setTimeout(() => container.innerHTML = '', 4000);
 }
 
-function typeText() {
-  const text = "Я нашёл один момент в вашей воронке, которая стоит вам -200К в месяц. Хотите покажу где именно - или сами найдёте?)";
-  const el = document.getElementById('typed-text');
-  let i = 0;
-  
-  function type() {
-    if (i < text.length) {
-      el.textContent += text.charAt(i);
-      i++;
-      setTimeout(type, 30 + Math.random() * 20);
-    }
-  }
-  type();
+function openEnvelope() {
+  if (tg?.HapticFeedback) { tg.HapticFeedback.impactOccurred('medium'); }
+  createConfetti();
+  document.getElementById('envelope-closed').style.display = 'none';
+  document.getElementById('envelope-open').style.display = 'block';
+}
+
+function sendResponse(action) {
+  if (tg) { tg.sendData(JSON.stringify({ action: action, timestamp: Date.now() })); }
+  else { alert('Напиши мне в Telegram!'); }
 }
 </script>
+
+</body>
+</html>
